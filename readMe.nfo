@@ -1,0 +1,139 @@
+-------------------------------------------------------------------------------
+
+				gdl 0.4f - by rov
+
+			 Gp32 games developement library
+
+-- Licence --------------------------------------------------------------------
+
+	this lib is only for use in amator's games, if you want use it into a comercial project, contact me
+	do not contact me for support, it's easy to use, there is doc, many exemples and you got a brain
+	all free production made with this lib must be open sources
+
+	this lib is an *ware send me what you want, pizza, code, ganja seeds, computer, paypal donate, ... mail me ^_^
+
+-- Support ----------------------------------------------------------------
+
+	support sprites, animated sprites, maps, animated maps, scrool, colision, fade, menu, MsgBox ...
+
+-- Historic ---------------------------------------------------------------
+
+	news in 0.4f - 17/10/03
+		* rewrite 16² map draw function (not all tested but i think it's work) 32² and/or any size function will be in next release ^^
+		* add read_map_file_with_tile to load a map file without using file tileset but specified tileset
+		* add convert_8b_to_16b who convert 8 bit buffer to 16 bit, with using the specified palette
+		* add draw_text_center_x_multiline who draw multiline text center on x
+		* add read_dir who read specified dir, show all files with specified extention, ask user to load a file, and return file choosen.
+		* add make_color to make a gp32 color with r,v,b (value 0->31) and a (0 or 1)
+		* add fade_16b_color who make 1 fade pass to a 16 bit color, to the white or the black, it's use the 'a' color bit but i think there is 2 15b color palette one after one , and 'a' design the palete to use, when i made this function, i was think a to 1 design +1/2 to the color (-> the 2 15b palette are 'mixed') so, fade work but ... try lol :D
+		* add draw_degrade_rect who draw a rect, with color fade to withe or black, and to up/left/right or down
+		* add draw_rect_border who draw only the boarder of the rect specified, with specified color
+		* add draw_rect_with_border who draw a fade rect with a color fixed border
+		* add menu and MsgBox ability, see menu.h :-)  note : only tested with 8² font
+		  - draw_menu this function draw a center menu, with specified menu element, a cursor and/or title if you specifi it and ask user to choose an menu item, you specifi valid/echap/extra key. return item number (start at 1) or 0 if echap or if it's an extra key return 0xFFFF
+		  - show_message_box who draw a center window contain specified text (multiline is suported) with, if you want, title and  16² or 32² animation
+		  - MsgBox who draw specified text in a standart box (change color directly in the MsgBox code), support title and multiline
+		  note : if you want to include a title in these 3 function, just write your title, the char '|' and after it, your text... use line jump with the '\n' char, show menu.h to got exemple.
+		* update get_gpg and get_pal to show MsgBox on file or ram error
+		* add a system font : gdl_font, menu and MsgBox will using this font, it's an pointer to a font stucture,
+		  so you need to set it with a loaded font object, with set_system_font. if you want to use it with gdl font routine, replace '&my_font' by 'gdl_font'
+		* add pcx support (only 8bit file)    see pcx.h
+		  - taille_pcx to get pcx file sixe x and y
+		  - charge_palette_pcx to load palette from a pcx file
+		  - rotate_90 to rotate raw data load to Gp32 screen, not optimised
+		  - rotate_90_and_draw who rotate bitmap and draw progres at specified pos
+		  - charge_pcx who load raw data from a pcx file, not flip result bitmap
+		  - charge_pcx_and_draw who load and draw progres at specified pos
+		  - load_pcx who load and flip bitmap, if screen color deep is 16b, load_pcx automaticaly convert the bitmap to 16bit, with using palette. load speed will depend of free ram, if there is any ram to got 3*img_buffer, speed will be max.
+		  - load_pcx_with_unrotate who are load_pcx(), but not free unrotate bitmap buffer
+		  - read_map_file_pcx to load a map file and using the tileset who are in the pcx file specified
+		  - load_animated_tile_from_pcx to import an animated tile from a pcx file
+		  - load_anim_from_pcx to import anim into a gfx structure from a pcx file
+		  - load_font_from_pcx who load a font object with specified pcx file, font size must be a square (by exemple, 8² or 16²)
+		  all function who are load a pcx file into a gdl object (map, font, anim) use load_pcx, so they are 8 and 16 bit directly compatible.
+		 
+		 i just write this changelog, so i certainly forget add,change or bugfix...
+
+	news in 0.4e - 02/09/03
+		* fix set_next_tile_frame_number with 1232123 animations  | thx to FagEmul for test and bug report :)
+		* fix frame number init bug in load_animated_tile	  |
+		* add frame_init argument in load_animated_tile, to init tile anim to be at a rand frame (1) or at frame 0 (0)
+ 		* add search of real tile's bound in tile's load function, update tile's draw functions to support it
+		* move all #define gdl max value in Gdl.h file
+		* add read/write map, tileset and palette file functions, see io.h
+		* fix draw_text_center and add center text vibrate draw functions, add draw_vertical_text and draw_int_rl function
+		* add load_font_, to load bad font (who not start at ascii code 32, space), can specifi the start ascii code
+		* add diferential_scrool and copy_tile_to_gfx functions
+		* add get_map_tile and set_map_tile, who are get_tile and set_tile but work with map pos and not screen pos
+		* add animate_tile, flip/set/get/reset animated_value propertie function of tiles
+		* add timer_inc and timer_dec, thx to fagemul for that :)
+		* add empty lines at end of all file, because of warning with gcc ...
+
+	news in 0.4d - 09/08/03
+		* fix load_anim function, now real frame bound seen to be compute perfectly
+		* add new font functions : draw_text_center, draw_text_center_x, draw_text_center_y, draw_text_vibrate and draw_int
+		* update draw_text and draw_text_rl to support multi line (with '\n')
+	
+	news in 0.4c_r1 - 08/08/03
+		* fix an minor error in structure definition
+		* fix a big problem in set_next_frame_number, anim's last frame in 123123 was never read (!!!!)
+		
+	news in 0.4c - first public release  -  02/08/03
+		* reset_anim() now see anim way to reset anim to the anim start or end
+		* write easy exemples of Gdl use
+		* adapt and recompil old games and demo to new Gdl release
+		* add count_fps() function
+		* update the doc
+
+	news in 0.4b - private
+		* fix load animated tile function, i was forget to add 'type anim' argument
+		* fix load anim function, scan of image to search transparent color was not start at frm_start image but at image 0
+		* add key detection functions : up_front, down_front, continu_key, instant_key, wait_key and refresh_key
+		* clean partially the lib : assemble or erase many older, unused or non work routines
+		* scan animation on load to search transparent color and real bounds of any frames, add support in draw functions to use it
+		* add globals var to define all max value (number of tiles max, anims max, image bank size, ...)
+		* start to write the doc
+		* change gfxlib name to Gdl (Game Developement Library)
+
+	news in 0.4a - private
+		* separe all the lib in many files, by function's them
+		* put all files in a GfxLib directory
+		* write this readMe :-)
+		
+	news in 0.3j - private
+		* add test_pixel_colision_gfx_point function, to test pixel colision between screen point and animation
+		* add SetPixel function, who set pixel color on an image of a gfx object
+		* first work on pixel colision between tile and gfx object
+		* add get_start_pos_of_a_tile function who return the pos_x and pos_y of the tile display at the x y screen pos
+		* add can_gfx_move function who test if a gfx object can move on a map
+		* add reajust_sprite_on_map function who 'auto move' a gfx object on a map if the object is in a non walkable tile
+	
+	news in 0.3i - private
+		* add detection of transparent color in load_anim, and support to draw transparent or not in the lib
+		* add support of moving gfx object with anim (by moving table)
+		* change all gfx object draw routine in adding an argument, who is the animimation number of gfx object to draw
+		
+	news in 0.3h - private
+		* fix pixel by pixel colision bug (when sprite 2 was bigger than sprite 1)
+		* add support of 8 bit to the pixel by pixel colision
+		* update pixel by pixel function to support gfx animated object :D
+		* cut colision detection in 2 function : zone and pixel colision
+		* add new pixel functions
+		* add 8bit pixel functions (same function as the 16 bit)
+		* now 16 bit pixel function names are as it : name_16
+
+		thanks to ThunderZ, FagEmul, lock, sanosuke, icemanGp, pekele, #gp32news, jah :-)
+
+		i search for a job so if you have it for me, mail me ! :)
+
+----  http://procvor.free.fr/gdl/  -  noferov@hotmail.com  -----------------
+
+gdl board (english and french) :   http://www.yaronet.com/forum.php?s=340
+
+-- know bugs ---------------------------------------------------------------
+
+	1\ draw_sprite_cut and afficher_sprite_cut functions not support inverted sprite, so the image bound will be draw will be the same bound if the image will be draw normally (graphical bug when draw cut, no bug if sprite no draw in the screen)
+	2\ there is a few bug in draw_sprite_cut when blit an image just up or left of the screen, normally nothig is draw, here a few bloc of image, transparent will be draw (so you will see nothing but small bloc is draw)
+	3\ fade function not wait for vblank so, line can be visible on fade  (with 20ms between fade pass, not see many line)  ...
+	4\ a bug in pixel_test_gfx_on_map(), when the first line of a tile is completely transparent, function detect this line completely not transparent, so function can return colision when there is no colision :/
+	5\ possible reboot when draw map, if it make it, increase your map size.
